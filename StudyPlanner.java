@@ -6,6 +6,9 @@ import java.util.Scanner;
 
 public class StudyPlanner {
 
+    /**
+     * @param args
+     */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
@@ -64,7 +67,7 @@ public class StudyPlanner {
         System.out.println("Você pode estudar " + hoursSaturday + " horas no sábado e " + hoursSunday +
                 " horas no domingo.");
 
-        // Fechar o scanner
+        // Fechar o scanner.
         scanner.close();
     }
 }
