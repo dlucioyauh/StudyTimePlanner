@@ -6,9 +6,6 @@ import java.util.Scanner;
 
 public class StudyPlanner {
 
-    /**
-     * @param args
-     */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
@@ -30,34 +27,37 @@ public class StudyPlanner {
         System.out.print("Quantas horas de curso são no total: ");
         int totalHours = scanner.nextInt();
 
-        // Calcular o número total de dias entre a data de início e a data final
-        long totalDays = ChronoUnit.DAYS.between(startDate, endDate);
-
-        // Calcular quantas horas por dia você precisa estudar
-        double hoursPerDay = (double) totalHours / totalDays;
-
-        // Calcular quantas horas de estudo são nos dias de semana (segunda a sexta-feira)
-        long weekdaysCount = 0;
-        LocalDate date = startDate;
-        while (!date.isAfter(endDate)) {
-            if (date.getDayOfWeek() != DayOfWeek.SATURDAY && date.getDayOfWeek() != DayOfWeek.SUNDAY) {
-                weekdaysCount++;
-            }
-            date = date.plusDays(1);
-        }
-
         // Pergunta ao usuário quantas horas pode estudar no sábado e no domingo
         System.out.print("Quantas horas você pode estudar no sábado: ");
         int hoursSaturday = scanner.nextInt();
         System.out.print("Quantas horas você pode estudar no domingo: ");
         int hoursSunday = scanner.nextInt();
 
-        // Subtrair as horas de estudo no sábado e domingo dos dias úteis
-        weekdaysCount -= (hoursSaturday > 0 ? 1 : 0); // Se houver horas no sábado, subtrai um dia útil
-        weekdaysCount -= (hoursSunday > 0 ? 1 : 0);   // Se houver horas no domingo, subtrai um dia útil
+        // Calcular o número total de dias entre a data de início e a data final
+        long totalDays = ChronoUnit.DAYS.between(startDate, endDate) + 1;
+
+        // Calcular quantas horas por dia você precisa estudar
+        double hoursPerDay = (double) totalHours / totalDays;
+
+        // Calcular quantas horas de estudo são nos dias de semana (segunda a sexta-feira)
+        long weekdaysCount = 0;
+        long weekendDaysCount = 0;
+        LocalDate date = startDate;
+        while (!date.isAfter(endDate)) {
+            if (date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY) {
+                weekendDaysCount++;
+            } else {
+                weekdaysCount++;
+            }
+            date = date.plusDays(1);
+        }
+
+        // Calcular as horas restantes após considerar os finais de semana
+        int totalWeekendHours = (hoursSaturday + hoursSunday) * (int) (weekendDaysCount / 2);
+        int remainingHours = totalHours - totalWeekendHours;
 
         // Calcular quantas horas por dia você precisa estudar nos dias de semana
-        double hoursPerWeekday = (double) totalHours / weekdaysCount;
+        double hoursPerWeekday = (double) remainingHours / weekdaysCount;
 
         // Exibir o resultado formatado
         System.out.println("\nVocê precisa estudar aproximadamente " + String.format("%.2f", hoursPerDay) +
